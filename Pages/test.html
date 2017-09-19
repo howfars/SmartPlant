@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>24小时历史数据</title>
+</head>
+<body>
+<div id="main" style="width:1000px;height:400px;margin:0 auto"></div>
+<script src="echarts_package/echarts.js"></script>
+<script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('main'));
+
+
+
+    option_tem = {
+        title: {
+            text: '                    1小时内温度',
+            textStyle:{        //标题文字格式
+                fontSize: 15,
+                fontWeight: 'bolder',
+                color: 'black'
+            }
+        },
+        grid:{
+            show:true,
+            y:'3%',
+
+            borderWidth:0
+            //backgroundColor:'rgba(255,255,255,0.15)'
+        },
+        tooltip: {                    //在移动过程中显示数据
+            trigger: 'item'
+        },
+        legend: {               //图例
+            show:true,
+            data:['气温']
+        },
+        dataZoom:{
+            show:false
+            //      type:'inside'
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataZoom: {
+                    yAxisIndex: 'none'
+                },
+                dataView: {readOnly: false},
+                magicType: {type: ['line', 'bar']},
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        xAxis:  {   //横坐标  时间,读取系统时间
+            show:true,
+            type: 'category',
+            axisLabel:{      //坐标轴
+                textStyle:{
+                    color:'black'
+                }
+            },
+            axisLine:{
+                lineStyle:{
+                    color:'black'
+                }
+            },
+            boundaryGap: false,
+            splitLine: {
+                show: false
+            },
+            data:['1小时前','50分钟前','40分钟前','30分钟前','20分钟前','10分钟前','现在']
+        },
+
+        yAxis: {
+            show:true,
+            type: 'value',
+            boundaryGap:true,
+            scale: true,
+            boundaryGap:[0.01,0.01],
+            axisLabel: {
+                formatter: '{value} °C'     //纵坐标
+            },
+            splitLine: {
+                show: false
+            }
+
+        },
+        series: [
+            {
+                name:'温度',
+                type:'line',
+                label:{
+                    normal:{
+                        textStyle:{
+                            fontSize:28
+                        }
+                    }
+                },
+                formatter:'{line}°C',
+                itemStyle : {
+                    normal: {
+                        label : {
+                            show: true,     //每个点显示数据
+                            position: 'top'
+                        },
+                        color : '#0066FF'    //修改颜色
+                    }
+                },
+                data:[26.5,26.6,26.5,26.5,26.5,26.5,26.5,26.5]
+
+    }
+    ]
+    };
+
+
+
+    setInterval(function () {
+        myChart.setOption(
+            option_tem
+        );
+    }, 5000);
+
+</script>
+</body>
+</html>

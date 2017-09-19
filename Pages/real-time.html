@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>植物实时状态</title>
+
+</head>
+
+<body>
+<div  id="gauge_tem" style="float: left;width:500px;height:400px;"></div>
+<div  id="gauge_hum" style="float: right;width:500px;height:400px;"></div>
+<div  id="gauge_li" style="float: left;width:500px;height:400px;"></div>
+<div  id="gauge_moi" style="float: right;width:500px;height:400px;"></div>
+
+<script src="echarts_package/echarts.js"></script>
+<script type="text/javascript">
+
+    var myChart_tem = echarts.init(document.getElementById('gauge_tem'));
+    var myChart_hum=echarts.init(document.getElementById('gauge_hum'));
+    var myChart_li=echarts.init(document.getElementById('gauge_li'));
+    var myChart_moi=echarts.init(document.getElementById('gauge_moi'));
+
+    function UpdateData() {
+
+        if (window.XMLHttpRequest)
+        {
+            // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行的代码
+            var xmlhttp=new XMLHttpRequest();
+        }
+        else
+        {
+            //IE6, IE5 浏览器执行的代码
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange=function()
+        {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                var JsonRes=JSON.parse(xmlhttp.responseText)
+                option_tem.series[0].data[0].value=JsonRes.Temperature;
+                option_hum.series[0].data[0].value=JsonRes.Humidity;
+                option_li.series[0].data[0].value=JsonRes.Light;
+                option_moi.series[0].data[0].value=JsonRes.Moisture;
+            }
+        }
+        xmlhttp.open("GET","update-now.php",true);
+        xmlhttp.send();
+
+
+
+    }
+    option_tem = {
+        tooltip : {
+            formatter: "{a} <br/>{b} : {c}℃"
+        },
+        toolbox: {
+            feature: {
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        series: [
+            {
+                name: '植物状态',
+                type: 'gauge',
+                detail: {formatter:'{value}℃'},
+                data: [{value: 0, name: '温度'}]
+            }
+        ]
+    };
+    option_hum = {
+        tooltip : {
+            formatter: "{a} <br/>{b} : {c}℃"
+        },
+        toolbox: {
+            feature: {
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        series: [
+            {
+                name: '植物状态',
+                type: 'gauge',
+                detail: {formatter:'{value}%'},
+                data: [{value: 0, name: '空气湿度'}]
+            }
+        ]
+    };
+    option_li = {
+        tooltip : {
+            formatter: "{a} <br/>{b} : {c}"
+        },
+        toolbox: {
+            feature: {
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        series: [
+            {
+                name: '植物状态',
+                type: 'gauge',
+                detail: {formatter:'{value}'},
+                data: [{value: 0, name: '光照强度'}],
+                max:1000
+            }
+        ]
+    };
+    option_moi = {
+        tooltip : {
+            formatter: "{a} <br/>{b} : {c}%"
+        },
+        toolbox: {
+            feature: {
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        series: [
+            {
+                name: '植物状态',
+                type: 'gauge',
+                detail: {formatter:'{value}%'},
+                data: [{value: 0, name: '土壤湿度'}]
+            }
+        ]
+    };
+
+    setInterval(function () {
+        UpdateData();
+        myChart_tem.setOption(option_tem, true);
+        myChart_hum.setOption(option_hum,true);
+        myChart_li.setOption(option_li,true);
+        myChart_moi.setOption(option_moi,true);
+    },2000);
+</script>
+
+</body>
+</html>
